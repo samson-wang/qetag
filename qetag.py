@@ -2,11 +2,14 @@
 # -*- coding: utf-8 -*-
 
 # 最新版本 https://github.com/qiniu/python-sdk/blob/master/qiniu/utils.py#L129
+# Add http data support
 
 import os
 import sys
 import base64
 import hashlib
+import requests
+
 try:
     from cStringIO import StringIO as BytesIO  # py2
     bytes_chr = chr
@@ -62,7 +65,7 @@ def get_io_qetag(fio):
 
 
 def get_qetag(filename):
-    """Caculates qetag
+    """Calculates qetag
 
     Parameters:
         - filename: string, file name
@@ -72,6 +75,16 @@ def get_qetag(filename):
     """
     with open(filename, 'rb') as fp:
         return get_io_qetag(fp)
+
+def http_qetag(url):
+    """Calculates qetag of http data
+
+    Parameters:
+        - url: string, url of data
+
+    Returns qetag
+    """
+    return get_io_qetag(BytesIO(requests.get(url).content))
 
 
 if __name__ == '__main__':
